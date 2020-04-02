@@ -1,0 +1,168 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ParkingConsole
+{
+    class Program
+    {
+        static List<string> smallVehicles = new List<string>();
+        static List<string> mediumVehicles = new List<string>();
+        static List<string> LargeVehicles = new List<string>();
+        static List<string> BookedSlots = new List<string>();
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                Start();
+                ParkingSlots();
+            }
+        }
+        public static void Start()
+        {
+            Console.WriteLine("Do you Want to Park or Remove Your Vehicle? Press P to park or R to remove");
+            string pr = Console.ReadLine();
+            string lowwerCase = pr.ToLower();
+            if (lowwerCase.Equals("p"))
+            {
+                Console.WriteLine("Please Select Your Car Types");
+                Console.WriteLine();
+                Console.WriteLine("1. Hatchback");
+                Console.WriteLine("2. Sedan");
+                Console.WriteLine("3. SUV");
+                Console.WriteLine();
+                string userInput = Console.ReadLine();
+                switch (userInput)
+                {
+                    case "1":
+                        Console.WriteLine("Available Slots Are:");
+                        for (int i = 0; i <= 50; i++)
+                        {
+                            smallVehicles.Add("S" + i);
+                            if (!BookedSlots.Contains(smallVehicles[i].ToString()))
+                            {
+                                Console.WriteLine(smallVehicles[i].ToString());
+                            }
+                        }
+
+                        for (int j = 0; j <= 30; j++)
+                        {
+                            mediumVehicles.Add("M" + j);
+                            if (!BookedSlots.Contains(mediumVehicles[j].ToString()))
+                            {
+                                Console.WriteLine(mediumVehicles[j].ToString());
+
+                            }
+                        }
+                        break;
+
+                    case "2":
+                        Console.WriteLine("Available Slots Are:");
+                        for (int i = 0; i <= 30; i++)
+                        {
+                            mediumVehicles.Add("M" + i);
+                            if (!BookedSlots.Contains(mediumVehicles[i].ToString()))
+                            {
+                                Console.WriteLine(mediumVehicles[i].ToString());
+
+                            }
+                        }
+
+                        for (int j = 0; j <= 20; j++)
+                        {
+                            LargeVehicles.Add("L" + j);
+                            if (!BookedSlots.Contains(LargeVehicles[j].ToString()))
+                            {
+                                Console.WriteLine(LargeVehicles[j].ToString());
+
+                            }
+                        }
+                        break;
+                    case "3":
+                        Console.WriteLine("Available Slots Are:");
+                        for (int i = 0; i <= 20; i++)
+                        {
+                            LargeVehicles.Add("L" + i);
+                            if (!BookedSlots.Contains(LargeVehicles[i].ToString()))
+                            {
+                                Console.WriteLine(LargeVehicles[i].ToString());
+                            }
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Please Select from Available Types");
+                        Start();
+                        break;
+                }
+            }
+            else if (lowwerCase.Equals("r"))
+            {
+                Console.WriteLine("Please Enter Your SlotNumber");
+                string bookedSlot = Console.ReadLine();
+                Console.WriteLine("Please Enter Your CarNumber");
+                string carNUmber = Console.ReadLine().ToString();
+                string removecarStatus = bookedSlot + "-" + carNUmber;
+                if (BookedSlots.Count() != 0)
+                {
+                    if (BookedSlots.Contains(removecarStatus))
+                    {
+                        Console.WriteLine("Waiting for empty the slot...");
+                        Thread.Sleep(5000);
+                        Console.WriteLine("Car Removed Successfully");
+                        Console.WriteLine();
+                        BookedSlots.Remove(bookedSlot);
+                        Start();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Either car number or Slot is Invalid");
+                        Console.WriteLine();
+                        Start();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No Car is Parked yet.");
+                    Console.WriteLine();
+                    Start();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Please Provide Valid Input for Further Processing");
+                Console.WriteLine();
+                Start();
+            }
+        }
+
+        public static void ParkingSlots()
+        {
+            Console.WriteLine("Please Enter the Car Number");
+            string CarNUmber = Console.ReadLine().ToString();
+            Console.WriteLine("Please Select Slot From Available Slots:");
+            Console.WriteLine();
+            string slotNum = Console.ReadLine();
+            if (smallVehicles.Contains(slotNum) || mediumVehicles.Contains(slotNum) || LargeVehicles.Contains(slotNum))
+            {
+                if (BookedSlots.Any(s => s.Contains(slotNum)))
+                {
+                    Console.WriteLine("Slot is Already Booked");
+                }
+                else
+                {
+                    string carStatus = CarNUmber + " Parked on " + slotNum;
+                    Console.WriteLine(carStatus);
+                    BookedSlots.Add(slotNum + "-" + CarNUmber);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Please Enter Correct Slot");
+            }
+
+        }
+    }
+}
